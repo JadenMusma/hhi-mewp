@@ -1,0 +1,84 @@
+spring:
+  profiles:
+    active: local
+    group:
+      local:
+        - common
+      dev:
+        - common
+      dev-mv1:
+        - common
+      prod:
+        - common
+
+---
+spring:
+  config:
+    activate:
+      on-profile: common
+  env:
+    send-card-qty: 50
+    firmware-buffer-size: 8000
+    first-send-card-qty: 500
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    generate-ddl: false
+    show-sql: true
+    database: oracle
+    database-platform: org.hibernate.dialect.OracleDialect
+  main:
+    log-startup-info: off
+logging.level:
+  org.hibernate.SQL: debug
+  org.hibernate.type: trace
+  org.hibernate.procedure.: trace
+server:
+  port: 8081
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.1.111)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=XE)))
+    username: c86e
+    password: prodc86e
+  env:
+    firmware-path: ./firmware
+---
+spring:
+  config:
+    activate:
+      on-profile: dev-mv1
+  datasource:
+    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=tcp)(HOST=172.30.1.111)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=XE)))
+    username: c86e
+    password: prodc86e
+  env:
+    firmware-path: /var/firmware
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=tcp)(HOST=10.100.17.215)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=HIDB)))
+    username: c86e
+    password: devc86e
+  env:
+    firmware-path: /var/firmware
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:oracle:thin:@(DESCRIPTION =(LOAD_BALANCE = OFF)(FAILOVER = TRUE)(ADDRESS = (PROTOCOL = TCP)(HOST = 10.100.17.12)(PORT = 1521))(ADDRESS = (PROTOCOL = TCP)(HOST = 10.100.17.11)(PORT = 1521))(CONNECT_DATA =(SERVICE_NAME = HIDB)))
+    username: c86e
+    password: prodc86e
+  env:
+    firmware-path: /var/firmware

@@ -1,0 +1,85 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Courier New", Courier;
+  font-size: 14px;
+}
+
+html,
+body, div {
+  width: 100%;
+  height: 96%;
+  margin: 0;
+}
+
+header {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  padding: 0.5rem;
+  background-color: #880017;
+  color: white;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+section {
+  width: 48%;
+  /*height: 96%;*/
+  margin: auto;
+  float: left;
+  overflow: auto;
+}
+section div{
+  width: auto;
+  max-width: 80rem;
+}
+
+section table {
+  width: 100%;
+  margin: 3%;
+}
+
+.container {
+  text-align: center;
+  height: 100%;
+  padding: 0.5rem;
+  margin: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  border-radius: 12px;
+}
+
+section table {
+  width: 90%;
+  border-top: 1px solid #444444;
+  border-collapse: collapse;
+}
+section th, td {
+  border-bottom: 1px solid #444444;
+  padding: 10px;
+}
+
+section div.first {
+  height: 65%;
+}
+section div.second {
+  height: 30%;
+}
+
+
+#log ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+}
+
+#log li {
+  margin: 0.1rem 0;
+  float: left;
+  white-space: nowrap;
+}
+
+pre {
+  text-align: left;
+}

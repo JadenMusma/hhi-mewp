@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    hostname: mosquitto
+    container_name: mosquitto
+    ports:
+      - 1883:1883
+      - 9001:9001
+    volumes:
+      - /home/user/mosquitto/config:/mosquitto/config
+      - /home/user/mosquitto/data:/mosquitto/data
+      - /home/user/mosquitto/log:/mosquitto/log
+    environment:
+      - TZ=Asia/Seoul
+    restart: always
+  springboot-app:
+    container_name: mewp-springboot
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 8081:8081
+      - 11099:11099
+    depends_on:
+      - mosquitto
+    environment:
+      - TZ=Asia/Seoul
+      - CONNECTION_URL=tcp://mosquitto:1883
+    volumes:
+      - /home/user/mewp/logs:/var/log
+      - /home/user/mewp/firmware:/var/firmware
+    mem_limit: "2g"
+    restart: always
+    command: ["java","-jar", "-Dspring.env.first-send-card-qty=500", "-Dspring.env.send-card-qty=50", "-Dspring.env.firmware-buffer-size=8000", "-Dspring.profiles.active=dev-mv1", "app.jar"]

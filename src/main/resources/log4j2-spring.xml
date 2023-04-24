@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="LOG_MSG">%style{%d}{bright,cyan} [%highlight{%-5level}] [%style{%t}{bright,magenta}] %style{%C{1.}}{bright,blue}: %msg%n%throwable
+        </Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT" ignoreExceptions="false">
+            <!--<PatternLayout pattern="%style{%d}{bright,cyan} [%highlight{%-5level}] [%style{%t}{bright,magenta}] %style{%C{1.}}{bright,blue}: %msg%n%throwable" />-->
+            <PatternLayout charset="UTF-8" pattern="${LOG_MSG}"/>
+        </Console>
+
+        <RollingFile name="AppAppender"
+                     fileName="/var/log/APP.log"
+                     filePattern="/var/log/backup/APP_%d{yyyy-MM-dd}_%i.log.gz">
+            <Filters>
+                <!-- deny error, fatal -->
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+
+                <!-- accept info, warn, error, fatal and denies debug/trace -->
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout>
+                <pattern>[%d{yyyy/MM/dd HH:mm:ss,SSS}] : %m%n</pattern>
+            </PatternLayout>
+            <PatternLayout charset="UTF-8" pattern="${LOG_MSG}"/>
+            <Policies>
+                <!-- rollover on startup, daily and when the file reaches 10 MegaBytes -->
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="10" fileIndex="max">
+                <Delete basePath="/var/log/backup" maxDepth="1">
+                    <IfFileName glob="APP-*.log.gz" />
+                    <!-- 3일이 경과한 로그파일은 자동 삭제 -->
+                    <IfLastModified age="30d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="SysAppender"
+                     fileName="/var/log/SYS.log"
+                     filePattern="/var/log/backup/SYS-%d{yyyy-MM-dd}_%i.log.gz">
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout>
+                <pattern>[%d{yyyy/MM/dd HH:mm:ss,SSS}] : %m%n</pattern>
+            </PatternLayout>
+            <PatternLayout charset="UTF-8" pattern="${LOG_MSG}"/>
+            <Policies>
+                <!-- rollover on startup, daily and when the file reaches 10 MegaBytes -->
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="10" fileIndex="max">
+                <Delete basePath="/var/log/backup" maxDepth="1">
+                    <!-- 3일이 경과한 로그파일은 자동 삭제 -->
+                    <IfFileName glob="SYS-*.log.gz" />
+                    <IfLastModified age="30d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="ConAppender"
+                     fileName="/var/log/LOG.log"
+                     filePattern="/var/log/backup/LOG-%d{yyyy-MM-dd}_%i.log.gz">
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+            <PatternLayout>
+                <pattern>[%d{yyyy/MM/dd HH:mm:ss,SSS}] [%-5p] [%c{1}:%L] - %m%n</pattern>
+            </PatternLayout>
+            <PatternLayout charset="UTF-8" pattern="${LOG_MSG}"/>
+            <Policies>
+                <!-- rollover on startup, daily and when the file reaches 10 MegaBytes -->
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="10" fileIndex="max">
+                <Delete basePath="/var/log/backup" maxDepth="1">
+                    <!-- 3일이 경과한 로그파일은 자동 삭제 -->
+                    <IfFileName glob="LOG-*.log.gz" />
+                    <IfLastModified age="15d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Root>
+
+        <Logger name="net.musma.hhi.middleware" level="DEBUG" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="ConAppender"/>
+            <AppenderRef ref="AppAppender"/>
+            <AppenderRef ref="SysAppender"/>
+        </Logger>
+
+    </Loggers>
+
+</Configuration>

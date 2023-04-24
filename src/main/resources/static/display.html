@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Vue Basics</title>
+    <link rel="stylesheet" href="styles.css"/>
+    <script src="vue.global.js" defer></script>
+    <script src="app.js" defer></script>
+</head>
+<body>
+<header>
+    <h1>고소차 작업 승인 시스템 미들웨어</h1>
+</header>
+<div id="game">
+    <section id="connection" class="container">
+        <div class="first">
+            <table>
+                <thead>
+                <td v-for="item in header"><strong>{{item}}</strong></td>
+                </thead>
+                <tr v-for="conn in connections">
+                    <td>{{ conn['danmalId'] }}</td>
+                    <td>{{ conn['eventCd'] }}</td>
+                    <td>{{ conn['firstConnectionTime'] }}</td>
+                    <td>{{ conn['lastConnectionTime'] }}</td>
+                    <td>{{ conn['fwVer'] }}</td>
+                    <td>{{ conn['hwVer'] }}</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+    <section id="log" class="container">
+        <ul>
+            <li v-for="logMessage in logMessages">
+                <span>{{ logMessage }}</span>
+            </li>
+        </ul>
+    </section>
+</div>
+</body>
+</html>
